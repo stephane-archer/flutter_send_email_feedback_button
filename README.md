@@ -2,6 +2,8 @@
 
 A simple Flutter button widget that opens the user's default email client with a pre-filled recipient and subject for sending feedback.
 
+![Demo](https://raw.githubusercontent.com/stephane-archer/flutter_send_email_feedback_button/main/assets/screenshots/demo.png)
+
 ## Features
 
 - Opens the default email app on tap.
