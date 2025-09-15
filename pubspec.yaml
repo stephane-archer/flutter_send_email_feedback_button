@@ -1,7 +1,6 @@
 name: send_email_feedback_button
-description: "A new Flutter package project."
+description: "A reusable Flutter button for sending feedback via email"
 version: 0.0.1
-homepage:
 
 environment:
   sdk: ^3.9.2
@@ -10,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -20,7 +20,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
-flutter:
+# flutter:
 
   # To add assets to your package, add an assets section, like this:
   # assets:
