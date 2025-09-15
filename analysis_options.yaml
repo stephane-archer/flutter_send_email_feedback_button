@@ -1,4 +1,19 @@
 include: package:flutter_lints/flutter.yaml
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+linter:
+  rules:
+  - always_declare_return_types
+  - avoid_annotating_with_dynamic
+  - avoid_dynamic_calls
+  - avoid_slow_async_io
+  - avoid_unused_constructor_parameters
+  - discarded_futures
+  - noop_primitive_operations
+  - omit_obvious_local_variable_types
+  - prefer_const_declarations
+  - sort_pub_dependencies
+  - unawaited_futures
+  - unnecessary_async
+  - unnecessary_await_in_return
+  - unnecessary_parenthesis
+  - unnecessary_statements

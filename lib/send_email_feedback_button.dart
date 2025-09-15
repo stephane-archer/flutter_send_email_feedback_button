@@ -9,17 +9,21 @@ class SendEmailFeedbackButton extends StatelessWidget {
     super.key,
     required String emailAddress,
     required String emailSubject,
-  })  : _emailSubject = emailSubject,
-        _emailAddress = emailAddress;
+  }) : _emailSubject = emailSubject,
+       _emailAddress = emailAddress;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        Uri url = Uri.parse("mailto:$_emailAddress?subject=$_emailSubject");
+        final url = Uri(
+          scheme: 'mailto',
+          path: _emailAddress,
+          query: 'subject=${Uri.encodeComponent(_emailSubject)}',
+        );
         await launchUrl(url);
       },
-      child: Row(
+      child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.email),
