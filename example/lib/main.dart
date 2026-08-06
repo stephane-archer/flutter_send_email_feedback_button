@@ -28,8 +28,11 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: SendEmailFeedbackButton(
-          emailAddress: "support@example.com",
-          emailSubject: "App Feedback & Test",
+          emailAddress: 'support@example.com',
+          emailSubject: 'App Feedback & Test',
+          emailBody: 'Please describe the issue:',
+          includeRuntimeDiagnostics: true,
+          additionalDiagnostics: const {'Example mode': 'demo'},
         ),
       ),
     );

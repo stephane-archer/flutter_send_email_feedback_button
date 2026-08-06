@@ -1,21 +1,23 @@
 name: send_email_feedback_button
 description: "A reusable Flutter button for sending feedback via email"
-version: 0.2.0
+version: 0.3.0
 repository: 'https://github.com/stephane-archer/flutter_send_email_feedback_button'
 
 environment:
-  sdk: ^3.9.2
-  flutter: ">=1.17.0"
+  sdk: ^3.6.0
+  flutter: ">=3.27.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  package_info_plus: ^8.3.1
   url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+  url_launcher_platform_interface: ^2.3.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

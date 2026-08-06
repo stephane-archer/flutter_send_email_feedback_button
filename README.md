@@ -1,67 +1,81 @@
 # SendEmailFeedbackButton
 
-A simple Flutter button widget that opens the user's default email client with a pre-filled recipient and subject for sending feedback.
+A reusable Flutter button and utility API that opens the user's default email
+client with a pre-filled feedback message.
 
 ![Demo](https://raw.githubusercontent.com/stephane-archer/flutter_send_email_feedback_button/main/assets/screenshots/demo.png)
 
 ## Features
 
-- Opens the default email app on tap.
-- Pre-fills recipient email address and subject line.
-- Uses `url_launcher` under the hood.
-- Lightweight and easy to use.
-- Exposes `sendEmail` utility function for custom button implementations.
+- Pre-fills the recipient, subject, and optional email body.
+- Optionally includes application and operating-system diagnostics.
+- Accepts application-specific diagnostic fields.
 
-## Usage
+## Requirements
 
-### Using the Widget
+- Dart 3.6 or later.
+- Flutter 3.27 or later.
+- This package uses `package_info_plus` 8.3.1 through 8.x.
+- Android builds require API 19 or later, compile SDK 34, Java 17, Android
+  Gradle Plugin 8.3 or later, and Gradle 8.4 or later.
+- Apple builds require iOS 12 or later and macOS 10.14 or later.
 
-``` Dart
+## Using the widget
+
+```dart
 import 'package:flutter/material.dart';
 import 'package:send_email_feedback_button/send_email_feedback_button.dart';
 
-class MyApp extends StatelessWidget {
+class FeedbackButton extends StatelessWidget {
+  const FeedbackButton({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: SendEmailFeedbackButton(
-            emailAddress: "support@example.com",
-            emailSubject: "App Feedback",
-          ),
-        ),
-      ),
+    return const SendEmailFeedbackButton(
+      emailAddress: 'support@example.com',
+      emailSubject: 'App feedback',
+      emailBody: 'Please describe the issue:',
+      includeRuntimeDiagnostics: true,
+      additionalDiagnostics: {
+        'Most recent error': 'FileSystemException',
+        'Publication mode': 'exclusive copy',
+      },
+      diagnosticsHeading: 'Diagnostics:',
     );
   }
 }
 ```
 
-### Using the Utility Function
+When runtime diagnostics are enabled, the package includes the application
+name, package identifier, version/build number, operating-system name, and OS
+version. Values passed through `additionalDiagnostics` are controlled entirely
+by the calling application.
 
-For custom button implementations, you can use the `sendEmail` function directly:
+If runtime metadata cannot be collected, the email launch is still attempted
+and the message reports that runtime diagnostics were unavailable.
 
-``` Dart
-import 'package:flutter/material.dart';
-import 'package:send_email_feedback_button/send_email_feedback_button.dart';
+Collecting runtime metadata can delay the launch by up to two seconds. The
+widget is disabled while a launch is in progress so repeated taps do not open
+multiple email composers. On web, a diagnostics-enabled launch uses the current
+browsing context because browsers may block a new window after an asynchronous
+metadata lookup.
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: OutlinedButton.icon(
-            onPressed: () => sendEmail(
-              emailAddress: "support@example.com",
-              emailSubject: "App Feedback",
-            ),
-            icon: Icon(Icons.email),
-            label: Text("Send Feedback"),
-          ),
-        ),
-      ),
-    );
-  }
+## Using the utility function
+
+For a custom button, call `sendEmail` directly:
+
+```dart
+final launchRequested = await sendEmail(
+  emailAddress: 'support@example.com',
+  emailSubject: 'App feedback',
+  emailBody: 'Please describe the issue:',
+  includeRuntimeDiagnostics: true,
+  additionalDiagnostics: {
+    'Current screen': 'Export',
+  },
+);
+
+if (!launchRequested) {
+  // Show an alternative contact method.
 }
 ```
