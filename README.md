@@ -8,14 +8,16 @@ client with a pre-filled feedback message.
 ## Features
 
 - Pre-fills the recipient, subject, and optional email body.
-- Optionally includes application and operating-system diagnostics.
+- Optionally includes privacy-safe application, operating-system, device, and
+  display diagnostics.
 - Accepts application-specific diagnostic fields.
 
 ## Requirements
 
-- Dart 3.6 or later.
-- Flutter 3.27 or later.
+- Dart 3.7 or later.
+- Flutter 3.29 or later.
 - This package uses `package_info_plus` 8.3.1 through 8.x.
+- This package uses `device_info_plus` 11.3.3 through 11.x.
 - Android builds require API 19 or later, compile SDK 34, Java 17, Android
   Gradle Plugin 8.3 or later, and Gradle 8.4 or later.
 - Apple builds require iOS 12 or later and macOS 10.14 or later.
@@ -47,9 +49,16 @@ class FeedbackButton extends StatelessWidget {
 ```
 
 When runtime diagnostics are enabled, the package includes the application
-name, package identifier, version/build number, operating-system name, and OS
-version. Values passed through `additionalDiagnostics` are controlled entirely
-by the calling application.
+name, package identifier, version/build number, operating-system name and
+version, system locales, native process architecture, and a non-identifying
+device model where the platform provides one reliably. The widget also reports
+the resolved app locale, logical window size, and device pixel ratio from its
+own widget context.
+
+The default diagnostics deliberately exclude CPU names, emulator status,
+user-assigned device and host names, usernames, GUIDs, machine IDs, vendor
+identifiers, and other unique identifiers. Values passed through
+`additionalDiagnostics` are controlled entirely by the calling application.
 
 If runtime metadata cannot be collected, the email launch is still attempted
 and the message reports that runtime diagnostics were unavailable.
@@ -70,6 +79,7 @@ final launchRequested = await sendEmail(
   emailSubject: 'App feedback',
   emailBody: 'Please describe the issue:',
   includeRuntimeDiagnostics: true,
+  diagnosticsContext: context,
   additionalDiagnostics: {
     'Current screen': 'Export',
   },
@@ -79,3 +89,9 @@ if (!launchRequested) {
   // Show an alternative contact method.
 }
 ```
+
+Passing `diagnosticsContext` lets the utility report the locale resolved by the
+nearest Flutter `Localizations` widget and metrics for the current view. It is
+optional: calls without it still receive system locales and the other global
+runtime diagnostics. This distinction matters when an app falls back to a
+different language than the user's first system locale.

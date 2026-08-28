@@ -1,3 +1,16 @@
+## 0.4.0
+
+* Add system and resolved application locales to runtime diagnostics.
+* Add current-view logical size and device pixel ratio when a diagnostics
+  context is available.
+* Add native process architecture and a privacy-safe device model where the
+  platform exposes one reliably.
+* Add an optional `diagnosticsContext` argument to `sendEmail`; the packaged
+  widget supplies it automatically.
+* Keep package and device metadata collection independent and best-effort.
+* Add `device_info_plus` 11.3.3 through 11.x and raise the package minimums to
+  Dart 3.7 and Flutter 3.29.
+
 ## 0.3.0
 
 * Add an optional pre-filled email body.

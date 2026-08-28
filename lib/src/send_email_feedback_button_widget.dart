@@ -21,23 +21,28 @@ class SendEmailFeedbackButton extends StatelessWidget {
     this.additionalDiagnostics = const {},
     String diagnosticsHeading = 'Diagnostics:',
     String label = 'Send feedback',
-  })  : _label = label,
-        _diagnosticsHeading = diagnosticsHeading,
-        _emailSubject = emailSubject,
-        _emailAddress = emailAddress;
+  }) : _label = label,
+       _diagnosticsHeading = diagnosticsHeading,
+       _emailSubject = emailSubject,
+       _emailAddress = emailAddress;
 
   @override
   Widget build(final BuildContext context) {
     return _FeedbackEmailLaunchButton(
       label: _label,
-      launchEmail: () => sendEmail(
-        emailAddress: _emailAddress,
-        emailSubject: _emailSubject,
-        emailBody: emailBody,
-        includeRuntimeDiagnostics: includeRuntimeDiagnostics,
-        additionalDiagnostics: additionalDiagnostics,
-        diagnosticsHeading: _diagnosticsHeading,
-      ),
+      launchEmail: () {
+        // Flutter 3.29 reports a discarded future even though it is returned.
+        // ignore: discarded_futures
+        return sendEmail(
+          emailAddress: _emailAddress,
+          emailSubject: _emailSubject,
+          emailBody: emailBody,
+          includeRuntimeDiagnostics: includeRuntimeDiagnostics,
+          diagnosticsContext: context,
+          additionalDiagnostics: additionalDiagnostics,
+          diagnosticsHeading: _diagnosticsHeading,
+        );
+      },
     );
   }
 }

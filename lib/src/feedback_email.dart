@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter/widgets.dart' show BuildContext;
 import 'package:url_launcher/url_launcher.dart';
 
+import 'feedback_context_diagnostics.dart';
 import 'feedback_runtime_diagnostics.dart';
 
 const Duration _defaultRuntimeDiagnosticsTimeout = Duration(seconds: 2);
@@ -123,12 +125,15 @@ Future<Uri> buildFeedbackEmailUri({
 /// allowed URI schemes are reported as successful because the browser does not
 /// expose whether the navigation completed. Runtime metadata collection is
 /// limited to two seconds; if it fails or times out, the launch is still
-/// attempted with an unavailable diagnostic marker.
+/// attempted with an unavailable diagnostic marker. When
+/// [diagnosticsContext] is provided, the resolved app locale and current view
+/// metrics are also included.
 Future<bool> sendEmail({
   required final String emailAddress,
   required final String emailSubject,
   final String? emailBody,
   final bool includeRuntimeDiagnostics = false,
+  final BuildContext? diagnosticsContext,
   final Map<String, String?> additionalDiagnostics = const {},
   final String diagnosticsHeading = 'Diagnostics:',
 }) async {
@@ -148,12 +153,21 @@ Future<bool> sendEmail({
     return launchUrl(uri);
   }
 
+  // Context-dependent values must be read before the first asynchronous gap.
+  // Caller-provided values retain the existing override behavior.
+  final contextDiagnostics = collectFeedbackContextDiagnostics(
+    diagnosticsContext,
+  );
+  final resolvedAdditionalDiagnostics = <String, String?>{
+    ...contextDiagnostics,
+    ...additionalDiagnostics,
+  };
   final uri = await buildFeedbackEmailUri(
     emailAddress: emailAddress,
     emailSubject: emailSubject,
     emailBody: emailBody,
     includeRuntimeDiagnostics: true,
-    additionalDiagnostics: additionalDiagnostics,
+    additionalDiagnostics: resolvedAdditionalDiagnostics,
     diagnosticsHeading: diagnosticsHeading,
   );
   // Using the current browsing context keeps web launches working after an

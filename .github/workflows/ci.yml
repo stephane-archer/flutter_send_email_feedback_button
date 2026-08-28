@@ -16,19 +16,19 @@ jobs:
       fail-fast: false
       matrix:
         sdk:
-          - '3.27.0'
+          - '3.29.0'
           - stable
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
 
-      - name: Set up Flutter 3.27.0
-        if: matrix.sdk == '3.27.0'
+      - name: Set up Flutter 3.29.0
+        if: matrix.sdk == '3.29.0'
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: '3.27.0'
+          flutter-version: '3.29.0'
           cache: true
 
       - name: Set up current Flutter stable
